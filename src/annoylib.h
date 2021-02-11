@@ -1349,6 +1349,7 @@ protected:
     cout << "[YJ] _get_all_nns, n: " << n << " / search_k: " << search_k << endl;
     cout << "[YJ] _get_all_nns, _f: " << _f << " / _K: " << _K << endl;
     cout << "[YJ] _get_all_nns, roots: " << _roots.size() << endl;
+    cout << "[YJ] type(S): " << typeid(S).name() << endl;
     // cout << "[YJ] _get_all_nns, v: ";
     // for (auto i=0; i<_f; i++)
     //   cout << *(v+i) << " ";
@@ -1380,6 +1381,10 @@ protected:
         nns.push_back(i);
       } else if (nd->n_descendants <= _K) {   // [YJ] K_: Max number of descendants to fit into node
         const S* dst = nd->children;
+        // cout << "[YJ] n_descendants: " << nd->n_descendants << endl;
+        // for(auto i=0; i<nd->n_descendants; i++)
+        //   cout << dst[i] << " ";
+        // cout << endl;
         nns.insert(nns.end(), dst, &dst[nd->n_descendants]);  // insert all children into nns vector
       } else {
         T margin = D::margin(nd, v, _f);

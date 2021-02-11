@@ -75,8 +75,14 @@ class AccuracyTest(unittest.TestCase):
     def test_glove_25(self):
         self._test_index('glove-25-angular', 69.00)
 
+    def test_glove_100(self):
+        self._test_index('glove-100-angular', 69.00)
+
     def test_nytimes_16(self):
         self._test_index('nytimes-16-angular', 80.00)
 
     def test_fashion_mnist(self):
         self._test_index('fashion-mnist-784-euclidean', 90.00)
+
+test = AccuracyTest()
+test.test_glove_100()
