@@ -26,6 +26,11 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <stddef.h>
+// ANNA call flow
+#include <iostream>
+#include <iterator>
+using namespace std;
+//
 
 #if defined(_MSC_VER) && _MSC_VER == 1500
 typedef unsigned char     uint8_t;
@@ -1127,6 +1132,7 @@ public:
   }
 
   void get_nns_by_vector(const T* w, size_t n, int search_k, vector<S>* result, vector<T>* distances) const {
+   cout << "[YJ] get_nns_by_vector, annoylib.h" << endl;
     _get_all_nns(w, n, search_k, result, distances);
   }
 
@@ -1340,15 +1346,23 @@ protected:
   }
 
   void _get_all_nns(const T* v, size_t n, int search_k, vector<S>* result, vector<T>* distances) const {
+    cout << "[YJ] _get_all_nns, n: " << n << " / search_k: " << search_k << endl;
+    cout << "[YJ] _get_all_nns, _f: " << _f << " / _K: " << _K << endl;
+    cout << "[YJ] _get_all_nns, roots: " << _roots.size() << endl;
+    // cout << "[YJ] _get_all_nns, v: ";
+    // for (auto i=0; i<_f; i++)
+    //   cout << *(v+i) << " ";
+    // cout<<endl;
+
     Node* v_node = (Node *)alloca(_s);
     D::template zero_value<Node>(v_node);
-    memcpy(v_node->v, v, sizeof(T) * _f);
+    memcpy(v_node->v, v, sizeof(T) * _f);   // [YJ] _f is dimension
     D::init_node(v_node, _f);
 
     std::priority_queue<pair<T, S> > q;
 
     if (search_k == -1) {
-      search_k = n * _roots.size();
+      search_k = n * _roots.size();   // [YJ] _roots.size() indicates n_trees
     }
 
     for (size_t i = 0; i < _roots.size(); i++) {
@@ -1364,9 +1378,9 @@ protected:
       q.pop();
       if (nd->n_descendants == 1 && i < _n_items) {
         nns.push_back(i);
-      } else if (nd->n_descendants <= _K) {
+      } else if (nd->n_descendants <= _K) {   // [YJ] K_: Max number of descendants to fit into node
         const S* dst = nd->children;
-        nns.insert(nns.end(), dst, &dst[nd->n_descendants]);
+        nns.insert(nns.end(), dst, &dst[nd->n_descendants]);  // insert all children into nns vector
       } else {
         T margin = D::margin(nd, v, _f);
         q.push(make_pair(D::pq_distance(d, margin, 1), static_cast<S>(nd->children[1])));

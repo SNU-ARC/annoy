@@ -105,6 +105,7 @@ public:
     }
   };
   void get_nns_by_vector(const float* w, size_t n, int search_k, vector<int32_t>* result, vector<float>* distances) const {
+    cout << "[YJ] get_nns_by_vector" << endl;
     vector<uint64_t> w_internal(_f_internal, 0);
     _pack(w, &w_internal[0]);
     if (distances) {
